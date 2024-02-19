@@ -26,6 +26,7 @@ public class TestBase {
 
 	public static Properties properties;
 	public static MutableCapabilities options;
+	public static RemoteWebDriver rdriver;
 	public static WebDriver driver;
 	public static URL url;
 	
@@ -64,7 +65,8 @@ public class TestBase {
 		if(browser.equalsIgnoreCase("safari")) {
 			options=new SafariOptions();
 		}
-		driver=new RemoteWebDriver(url, options);
+		rdriver=new RemoteWebDriver(url, options);
+		driver=rdriver;
 		
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TimeOutWaits.IMPLICITWAIT_TIME));
