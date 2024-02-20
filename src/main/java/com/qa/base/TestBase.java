@@ -25,9 +25,12 @@ import com.qa.config.TimeOutWaits;
 public class TestBase {
 
 	public static Properties properties;
-	public static MutableCapabilities options;
+	private static MutableCapabilities options;
+	//public static RemoteWebDriver rdriver;
 	public static WebDriver driver;
-	public static URL url;
+	private static URL url;
+	
+	private static ThreadLocal<WebDriver> tldriver=new ThreadLocal<>();
 	
 	public TestBase() {
 		properties=new Properties();
@@ -54,6 +57,7 @@ public class TestBase {
 		
 		if(browser.equalsIgnoreCase("chrome")) {
 			options=new ChromeOptions();
+			
 		}
 		if(browser.equalsIgnoreCase("firefox")) {
 			options=new FirefoxOptions();
@@ -64,37 +68,53 @@ public class TestBase {
 		if(browser.equalsIgnoreCase("safari")) {
 			options=new SafariOptions();
 		}
-		driver=new RemoteWebDriver(url, options);
+		tldriver.set(new RemoteWebDriver(url, options));
+		//driver=tldriver.get();
 		
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TimeOutWaits.IMPLICITWAIT_TIME));
-		driver.manage().deleteAllCookies();
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TimeOutWaits.PAGELOADWait_TIME));
 		
-		driver.get(properties.getProperty("url"));
+		getDriver().manage().window().maximize();
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(TimeOutWaits.IMPLICITWAIT_TIME));
+		getDriver().manage().deleteAllCookies();
+		getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TimeOutWaits.PAGELOADWait_TIME));
+		
+		getDriver().get(properties.getProperty("url"));
+		driver=getDriver();
 	}
 	
 	public static void LocalDriver_initialization(String browser) {
 		if(browser.equalsIgnoreCase("chrome")) {
-			driver= new ChromeDriver();
+			tldriver.set(new ChromeDriver());
 		}
 		if(browser.equalsIgnoreCase("firefox")) {
-			driver=new FirefoxDriver();
+			//driver=new FirefoxDriver();
+			tldriver.set(new FirefoxDriver());
 		}
 		if(browser.equalsIgnoreCase("edge")) {
-			driver=new EdgeDriver();
+			//driver=new EdgeDriver();
+			tldriver.set(new EdgeDriver());
 		}
 		if(browser.equalsIgnoreCase("safari")) {
-			driver=new SafariDriver();
+			//driver=new SafariDriver();
+			tldriver.set(new SafariDriver());
 		}
 		
+		driver=getDriver();
+		getDriver().manage().window().maximize();
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(TimeOutWaits.IMPLICITWAIT_TIME));
+		getDriver().manage().deleteAllCookies();
+		getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TimeOutWaits.PAGELOADWait_TIME));
 		
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TimeOutWaits.IMPLICITWAIT_TIME));
-		driver.manage().deleteAllCookies();
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TimeOutWaits.PAGELOADWait_TIME));
+		getDriver().get(properties.getProperty("url"));
 		
-		driver.get(properties.getProperty("url"));
+	}
+	
+	/**
+	 * this is used to get the driver with ThreadLocal
+	 * 
+	 * @return
+	 */
+	public static synchronized WebDriver getDriver() {
+		return tldriver.get();
 	}
 	
 }
