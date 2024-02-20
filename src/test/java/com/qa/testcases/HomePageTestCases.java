@@ -26,8 +26,9 @@ public class HomePageTestCases  extends TestBase{
 		super();
 	}
 	
-	@Parameters("browser")
+	
 	@BeforeMethod
+	@Parameters("browser")
 	public void launchBrowser(String browser) {
 		System.out.println("browser:"+browser+" getting launch");
 		logger.info("browser getting launch");

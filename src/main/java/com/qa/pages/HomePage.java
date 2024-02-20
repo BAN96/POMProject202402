@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qa.base.TestBase;
+import com.qa.util.TestUtil;
 
 public class HomePage extends TestBase{
 
@@ -34,6 +35,7 @@ public class HomePage extends TestBase{
 	}
 	
 	public LoginPopup clickLogin() {
+		new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.visibilityOf(loginLink));
 		loginLink.click();
 		return new LoginPopup();
 	}

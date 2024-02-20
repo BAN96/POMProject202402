@@ -24,8 +24,9 @@ public class LoginPageTestCases extends TestBase{
 		super();
 	}
 	
-	@Parameters("browser")
+	
 	@BeforeMethod
+	@Parameters("browser")
 	public void launchBrowser(String browser) {
 		System.out.println("browser:"+browser+" getting launch");
 		LocalDriver_initialization(browser);
@@ -34,16 +35,17 @@ public class LoginPageTestCases extends TestBase{
 		System.out.println("User on Homepage");
 		System.out.println("clicking on Login on homepage");
 		login=home.clickLogin();
+		System.out.println("Login popup opened");
 	}
 	
-	@Test(priority = 1)
+	@Test
 	public void verifyPageHeader() {
 		System.out.println("getting login popup title");
 		header=login.getLoginPopupTitle();
 		System.out.println("Login popup title is: "+header);
 		Assert.assertEquals(header, "Log in");
 	}
-	@Test(priority = 2)
+	@Test
 	public void verifyLoginWithValidCredentials() {
 		System.out.println("Sending User name and Password");
 		login.enterUsername(properties.getProperty("user"));
